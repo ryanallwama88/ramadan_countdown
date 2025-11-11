@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العد التنازلي لشهر رمضان</title>
+    <!-- تحميل Tailwind CSS للستايل السريع والجميل -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* تعريف الخط الأساسي للعرض */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1f2937, #111827); /* خلفية داكنة متدرجة */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #f3f4f6;
+        }
+        /* تصميم خاص للبطاقات */
+        .countdown-card {
+            background-color: #2c3a4d; /* لون بطاقة أغمق قليلاً */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        .countdown-card:hover {
+            transform: translateY(-5px);
+        }
+        /* تصميم الأرقام */
+        .countdown-value {
+            font-size: 2.5rem; /* حجم متوسط للأرقام على الهاتف */
+            font-weight: 800;
+            color: #facc15; /* لون ذهبي لامع */
+            line-height: 1;
+            padding-bottom: 0.5rem;
+        }
+        /* تعديل حجم الأرقام للشاشات الأكبر ليتسع لـ 5 عناصر */
+        @media (min-width: 640px) {
+            .countdown-value {
+                font-size: 3.5rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .countdown-value {
+                font-size: 4rem;
+            }
+        }
+        /* تحسين شكل الهلال */
+        .moon {
+            font-size: 4rem;
+            color: #facc15;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body onload="startCountdown()">
+    <div id="countdown-container" class="max-w-4xl w-full mx-4 p-8 text-center rounded-2xl bg-gray-800 bg-opacity-90 backdrop-blur-md shadow-2xl border-t border-yellow-500/20">
+        
+        <!-- الهلال و العنوان -->
+        <div class="mb-8">
+            <div class="moon mb-3">🌙</div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold mb-2 text-yellow-500">العد التنازلي لشهر رمضان 1447 هـ</h1>
+            <p class="text-lg text-gray-400">نستعد لاستقبال شهر الخير والبركات. التاريخ المتوقع: 18 فبراير 2026</p>
+        </div>
+
+        <!-- عرض العد التنازلي - ترتيب: أشهر، أيام، ساعات، دقائق، ثواني -->
+        <div id="countdown-display" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4 lg:gap-8">
+            
+            <!-- الأشهر -->
+            <div class="countdown-card p-4 sm:p-6 rounded-xl border-b-4 border-yellow-500">
+                <div id="months" class="countdown-value">00</div>
+                <div class="text-gray-300 font-semibold">شهر</div>
+            </div>
+
+            <!-- الأيام المتبقية في الشهر الأخير -->
+            <div class="countdown-card p-4 sm:p-6 rounded-xl border-b-4 border-yellow-500">
+                <div id="days" class="countdown-value">00</div>
+                <div class="text-gray-300 font-semibold">يوم</div>
+            </div>
+
+            <!-- الساعات -->
+            <div class="countdown-card p-4 sm:p-6 rounded-xl border-b-4 border-yellow-500">
+                <div id="hours" class="countdown-value">00</div>
+                <div class="text-gray-300 font-semibold">ساعة</div>
+            </div>
+
+            <!-- الدقائق -->
+            <div class="countdown-card p-4 sm:p-6 rounded-xl border-b-4 border-yellow-500">
+                <div id="minutes" class="countdown-value">00</div>
+                <div class="text-gray-300 font-semibold">دقيقة</div>
+            </div>
+
+            <!-- الثواني -->
+            <div class="countdown-card p-4 sm:p-6 rounded-xl border-b-4 border-yellow-500">
+                <div id="seconds" class="countdown-value">00</div>
+                <div class="text-gray-300 font-semibold">ثانية</div>
+            </div>
+        </div>
+
+        <!-- رسالة انتهاء العد التنازلي -->
+        <div id="ramadan-message" class="mt-8 text-2xl font-bold text-green-400 hidden">
+            رمضان مبارك! تقبل الله منا ومنكم صالح الأعمال.
+        </div>
+
+    </div>
+
+    <script>
+        // التاريخ المستهدف: 18 فبراير 2026، الساعة 6:00 مساءً (وقت غروب الشمس التقريبي)
+        // ملاحظة: يتم تحديد التوقيت الزمني (Timezone) تلقائياً بناءً على جهاز المستخدم.
+        const targetDate = new Date("Feb 18, 2026 18:00:00").getTime();
+
+        /**
+         * تحديث العد التنازلي كل ثانية
+         */
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // إذا انتهى العد التنازلي
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown-display").classList.add('hidden');
+                document.getElementById("ramadan-message").classList.remove('hidden');
+                return;
+            }
+
+            // الحسابات الزمنية
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const msPerHour = 1000 * 60 * 60;
+            const msPerMinute = 1000 * 60;
+            
+            // 1. حساب إجمالي الأيام
+            const daysTotal = Math.floor(distance / msPerDay);
+            
+            // 2. حساب الأشهر والأيام المتبقية (تقريبي: نفترض 30 يوماً في الشهر)
+            const months = Math.floor(daysTotal / 30);
+            const remainingDays = daysTotal % 30; 
+            
+            // 3. حساب الساعات والدقائق والثواني من المسافة المتبقية في اليوم الأخير
+            const remainderOfLastDay = distance % msPerDay;
+
+            const hours = Math.floor(remainderOfLastDay / msPerHour);
+            const minutes = Math.floor((remainderOfLastDay % msPerHour) / msPerMinute);
+            const seconds = Math.floor((remainderOfLastDay % msPerMinute) / 1000);
+
+            // عرض النتائج مع تنسيق الرقمين (مثل 05 بدلاً من 5)
+            document.getElementById("months").innerHTML = months.toString().padStart(2, '0');
+            document.getElementById("days").innerHTML = remainingDays.toString().padStart(2, '0');
+            document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+        }
+
+        let countdownInterval;
+
+        /**
+         * بدء العد التنازلي
+         */
+        function startCountdown() {
+            // تحديث فوري عند التحميل
+            updateCountdown();
+            // ثم التحديث كل ثانية
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+    </script>
+</body>
+</html>
